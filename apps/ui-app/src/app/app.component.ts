@@ -1,8 +1,8 @@
 ﻿import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { AuthenticationService } from './_services';
 import { User } from './_models';
+import { GenericLoginAuthService } from '@lp-demo/ui';
 
 @Component({ selector: 'app', templateUrl: 'app.component.html' })
 export class AppComponent {
@@ -11,7 +11,7 @@ export class AppComponent {
 
   constructor(
     private router: Router,
-    private authenticationService: AuthenticationService
+    private authenticationService: GenericLoginAuthService
   ) {
     this.authenticationService.currentUser.subscribe(
       (x) => (this.currentUser = x)

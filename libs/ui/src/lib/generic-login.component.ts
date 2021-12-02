@@ -1,7 +1,7 @@
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup } from '@angular/forms';
 import { first } from 'rxjs/operators';
-import { GenericLoginAuthService } from '../generic-login-auth.service';
+import { GenericLoginAuthService } from './generic-login-auth.service';
 
 export abstract class GenericLoginComponent {
   loading = false;
@@ -9,8 +9,8 @@ export abstract class GenericLoginComponent {
   error = '';
 
   constructor(
-    private router: Router,
-    private authenticationService: GenericLoginAuthService
+    public router: Router,
+    public authenticationService: GenericLoginAuthService
   ) {
     if (this.authenticationService.currentUserValue) {
       this.router.navigate([this.getDefaultUrl()]);
@@ -23,7 +23,7 @@ export abstract class GenericLoginComponent {
 
   abstract getPasswordField(): string;
 
-  abstract getReturnUrl(): string;
+  abstract getReturnUrl(): string
 
   abstract getDefaultUrl(): string;
 
@@ -47,7 +47,7 @@ export abstract class GenericLoginComponent {
       .pipe(first())
       .subscribe(
         () => {
-          this.router.navigate([this.getReturnUrl()]);
+          this.router.navigate([this.getDefaultUrl()]);
         },
         (error) => {
           this.error = error;

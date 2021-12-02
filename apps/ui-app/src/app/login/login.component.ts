@@ -1,30 +1,23 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { first } from 'rxjs/operators';
 
-import { AuthenticationService } from '../_services';
+import { GenericLoginComponent, GenericLoginAuthService } from '@lp-demo/ui';
 
 @Component({ templateUrl: 'login.component.html' })
-export class LoginComponent implements OnInit {
+export class LoginComponent extends GenericLoginComponent implements OnInit {
   // @ts-ignore
   loginForm: FormGroup;
   loading = false;
   submitted = false;
-  // @ts-ignore
-  returnUrl: string;
-  error = '';
 
   constructor(
-    private formBuilder: FormBuilder,
-    private route: ActivatedRoute,
-    private router: Router,
-    private authenticationService: AuthenticationService
+    public formBuilder: FormBuilder,
+    public route: ActivatedRoute,
+    public router: Router,
+    public authenticationService: GenericLoginAuthService
   ) {
-    // redirect to home if already logged in
-    if (this.authenticationService.currentUserValue) {
-      this.router.navigate(['/']);
-    }
+    super(router, authenticationService);
   }
 
   ngOnInit() {
@@ -32,36 +25,25 @@ export class LoginComponent implements OnInit {
       username: ['', Validators.required],
       password: ['', Validators.required],
     });
-
-    // get return url from route parameters or default to '/'
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
 
-  // convenience getter for easy access to form fields
-  get f() {
-    return this.loginForm.controls;
+  getLoginForm(): FormGroup {
+    return this.loginForm;
   }
 
-  onSubmit() {
-    this.submitted = true;
+  getUserField(): string {
+    return 'username';
+  }
 
-    // stop here if form is invalid
-    if (this.loginForm.invalid) {
-      return;
-    }
+  getPasswordField(): string {
+    return 'password';
+  }
 
-    this.loading = true;
-    this.authenticationService
-      .login(this.f.username.value, this.f.password.value)
-      .pipe(first())
-      .subscribe(
-        (data) => {
-          this.router.navigate([this.returnUrl]);
-        },
-        (error) => {
-          this.error = error;
-          this.loading = false;
-        }
-      );
+  getReturnUrl(): string {
+    return this.route.snapshot.queryParams['returnUrl'] || '/';
+  }
+
+  getDefaultUrl(): string {
+    return '/';
   }
 }
