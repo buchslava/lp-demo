@@ -1,19 +1,17 @@
 ﻿import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { GenericLoginComponent, GenericLoginAuthService } from '@lp-demo/ui';
 
 @Component({ templateUrl: 'login.component.html' })
 export class LoginComponent extends GenericLoginComponent implements OnInit {
-  // @ts-ignore
-  loginForm: FormGroup;
+  loginForm!: FormGroup;
   loading = false;
   submitted = false;
 
   constructor(
     public formBuilder: FormBuilder,
-    public route: ActivatedRoute,
     public router: Router,
     public authenticationService: GenericLoginAuthService
   ) {
@@ -27,6 +25,10 @@ export class LoginComponent extends GenericLoginComponent implements OnInit {
     });
   }
 
+  getAuthUrl(): string {
+    return '/api/users/authenticate';
+  }
+
   getLoginForm(): FormGroup {
     return this.loginForm;
   }
@@ -37,10 +39,6 @@ export class LoginComponent extends GenericLoginComponent implements OnInit {
 
   getPasswordField(): string {
     return 'password';
-  }
-
-  getReturnUrl(): string {
-    return this.route.snapshot.queryParams['returnUrl'] || '/';
   }
 
   getDefaultUrl(): string {

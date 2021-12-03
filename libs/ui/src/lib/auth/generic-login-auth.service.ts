@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { User } from '../../../data/src/index';
+import { User } from '@lp-demo/data';
 
 @Injectable({
   providedIn: 'root',
@@ -24,16 +24,14 @@ export class GenericLoginAuthService {
     return this.currentUserSubject.value;
   }
 
-  login(username: string, password: string) {
-    return this.http
-      .post<any>(`/api/users/authenticate`, { username, password })
-      .pipe(
-        map((user) => {
-          localStorage.setItem('currentUser', JSON.stringify(user));
-          this.currentUserSubject.next(user);
-          return user;
-        })
-      );
+  login(username: string, password: string, url: string) {
+    return this.http.post<any>(url, { username, password }).pipe(
+      map((user) => {
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        this.currentUserSubject.next(user);
+        return user;
+      })
+    );
   }
 
   logout() {

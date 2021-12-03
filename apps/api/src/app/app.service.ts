@@ -1,15 +1,5 @@
 import { Injectable } from '@nestjs/common';
-
-export class User {
-  constructor(
-    public id: number,
-    public username: string,
-    public password: string,
-    public firstName: string,
-    public lastName: string,
-    public token?: string
-  ) {}
-}
+import { User } from '@lp-demo/data';
 
 @Injectable()
 export class AppService {
